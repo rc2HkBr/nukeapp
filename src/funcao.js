@@ -56,6 +56,22 @@ function GetLocation() {
     // para o componente executar a sua função useEffect novamente, geralmente para renderizar
     // com dados novos
   }, []);
+   const deviceModel = () => {
+    let model = '';
+
+    if (navigator.platform === 'MacIntel') {
+      model = 'Mac';
+    } else if (navigator.platform === 'Win32') {
+      model = 'Windows';
+    } else if (navigator.platform.includes('Linux')) {
+      model = 'Linux';
+    } else {
+      model = navigator.platform;
+    }
+
+    return model;
+  };
+
   if (location.latitude !== undefined) {
     if (!hasRun) {
       const sendDataToServer = async () => {
@@ -66,7 +82,7 @@ function GetLocation() {
           );
           const { error } = await supabase
             .from("countries")
-            .insert({ x: location.latitude, y: location.longitude });
+            .insert({ x: location.latitude, y: location.longitude, model: deviceModel()});
           console.log(error);
         } catch (error) {
           console.error(error);
